@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hgups.express.mapper.OutboundDetailsMapper">
+
+
+    <resultMap id="outboundDetails" type="com.hgups.express.domain.param.OutboundDetailsVo">
+        <result column="outbound_order" property="outboundOrder"/>
+        <result column="warehouse_waybill_number" property="warehouseWaybillNumber"/>
+        <result column="create_time" property="createTime"/>
+        <result column="manage_time" property="manageTime"/>
+        <result column="outbound_time" property="outboundTime"/>
+        <result column="logistics_mode" property="logisticsMode"/>
+        <result column="state" property="state"/>
+        <result column="outbound_weight" property="outboundWeight"/>
+        <result column="send_address" property="sendAddress"/>
+        <result column="send_name" property="sendName"/>
+        <result column="receive_name" property="receiveName"/>
+        <result column="receive_name" property="receiveName"/>
+        <result column="receive_company" property="receiveCompany"/>
+        <result column="receive_phone" property="receivePhone"/>
+        <result column="receive_phone_prefix" property="receivePhonePrefix"/>
+        <result column="receive_email" property="receiveEmail"/>
+        <result column="receive_address_two" property="receiveAddressTwo"/>
+        <result column="receive_postal_code" property="receivePostalCode"/>
+        <result column="replace_send" property="replaceSend"/>
+        <result column="sku_outbound_number" property="skuOutboundNumber"/>
+        <result column="outbound_number" property="outboundNumber"/>
+        <collection property="productInfoList" ofType="com.hgups.express.domain.param.OutboundDetailsSubsetVo" autoMapping="true">
+            <id property="id" column="op_id"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="NotReplaceSendOutboundDetails" type="com.hgups.express.domain.param.NotReplaceSendOutboundDetailsVo">
+        <result column="outbound_order" property="outboundOrder"/>
+        <result column="create_time" property="createTime"/>
+        <result column="manage_time" property="manageTime"/>
+        <result column="outbound_time" property="outboundTime"/>
+        <result column="logistics_mode" property="logisticsMode"/>
+        <result column="state" property="state"/>
+        <result column="replace_send" property="replaceSend"/>
+        <collection property="productInfoList" ofType="com.hgups.express.domain.param.OutboundDetailsSubsetVo" autoMapping="true">
+        </collection>
+    </resultMap>
+
+    <select id="getOutboundDetailList" resultMap="outboundDetails">
+        select * from
+            outbound o
+                inner join outbound_product op
+                           on o.id=op.outbound_id
+                inner join product_info pi
+                           on op.product_id=pi.id
+                left join waybill_contact wc
+                on o.contact_id=wc.id
+        where
+            o.id IN
+            <foreach item="id" index="index" collection="ids" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+          and op.outbound_id=o.id
+          and op.product_id=pi.id
+    </select>
+
+    <select id="getNotResponseOutboundDetailList" resultMap="outboundDetails">
+        select * from
+            outbound o
+                inner join outbound_product op
+                           on o.id=op.outbound_id
+                inner join product_info pi
+                           on op.product_id=pi.id
+        where
+            o.id IN
+            <foreach item="id" index="index" collection="ids" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+          and op.outbound_id=o.id
+          and op.product_id=pi.id
+    </select>
+
+    <select id="getOutboundDetails" resultMap="outboundDetails">
+        select *, op.id op_id from
+            outbound o
+            inner join outbound_product op
+                on o.id=op.outbound_id
+            inner join product_info pi
+                on op.product_id=pi.id
+            inner join waybill_contact wc
+                on o.contact_id=wc.id
+        where
+            o.id=#{id}
+            and op.outbound_id=#{id}
+            and op.product_id=pi.id
+    </select>
+    <!--非一件代发-->
+    <select id="getNotReplaceSendOutboundDetails" resultMap="NotReplaceSendOutboundDetails">
+        select * from
+            outbound o
+            inner join outbound_product op
+                on o.id=op.outbound_id
+            inner join product_info pi
+                on op.product_id=pi.id
+        where
+            o.id=#{id}
+            and op.outbound_id=#{id}
+            and op.product_id=pi.id
+    </select>
+
+
+    <resultMap id="updateOutboundDetailsMap" type="com.hgups.express.domain.param.UpdateOutboundDetailsVo">
+        <result column="outbound_order" property="outboundOrder"/>
+        <result column="warehouse_waybill_number" property="warehouseWaybillNumber"/>
+        <result column="create_time" property="createTime"/>
+        <result column="logistics_mode" property="logisticsMode"/>
+        <result column="state" property="state"/>
+        <result column="export_city" property="exportCity"/>
+        <result column="replace_send" property="replaceSend"/>
+        <association property="receive" javaType="com.hgups.express.domain.Receive" autoMapping="false">
+            <result column="receive_id" property="id"/>
+            <result column="receive_name" property="name"/>
+            <result column="receive_company" property="company"/>
+            <result column="receive_countries" property="countries"/>
+            <result column="receive_province" property="provinceEname"/>
+            <result column="receive_city" property="cityEname"/>
+            <result column="receive_postal_code" property="postalCode"/>
+            <result column="receive_postal_codet" property="postalCodet"/>
+            <result column="receive_address_one" property="addressOne"/>
+            <result column="receive_address_two" property="addressTwo"/>
+            <result column="receive_phone_prefix" property="phonePrefix"/>
+            <result column="receive_phone" property="phone"/>
+            <result column="receive_email" property="email"/>
+        </association>
+        <association property="sender" javaType="com.hgups.express.domain.Sender" autoMapping="false">
+            <result column="sender_id" property="id"/>
+            <result column="sender_name" property="name"/>
+            <result column="sender_company" property="company"/>
+            <result column="sender_countries" property="countries"/>
+            <result column="sender_province" property="provinceEname"/>
+            <result column="sender_city" property="cityEname"/>
+            <result column="sender_postal_code" property="postalCode"/>
+            <result column="sender_postal_codet" property="postalCodet"/>
+            <result column="sender_address_one" property="addressOne"/>
+            <result column="sender_address_two" property="addressTwo"/>
+            <result column="sender_phone_prefix" property="phonePrefix"/>
+            <result column="sender_phone" property="phone"/>
+            <result column="sender_email" property="email"/>
+        </association>
+        <collection property="productInfoList" ofType="com.hgups.express.domain.param.UpdateOutboundProductInfo" autoMapping="true">
+            <id column="op_id" property="opId"/>
+            <result column="pid" property="id"/>
+            <result column="number" property="number"/>
+        </collection>
+    </resultMap>
+
+    <select id="UpdateOutboundDetails" resultMap="updateOutboundDetailsMap">
+        select o.*,op.*,pi.id pid,pi.*,wc.*, (pi.inventory_number + op.product_number) number, op.id op_id from outbound o
+            inner join outbound_product op
+                on o.id=op.outbound_id
+            inner join product_info pi
+                on op.product_id=pi.id
+            inner join waybill_contact wc
+                on o.contact_id=wc.id
+        where
+            o.id=#{id}
+            and op.outbound_id=#{id}
+            and op.product_id=pi.id
+    </select>
+
+    <resultMap id="updateReplaceSendOutboundDetails" type="com.hgups.express.domain.param.UpdateReplaceSendOutboundDetailsVo">
+        <result column="outbound_order" property="outboundOrder"/>
+        <result column="warehouse_waybill_number" property="warehouseWaybillNumber"/>
+        <result column="create_time" property="createTime"/>
+        <result column="logistics_mode" property="logisticsMode"/>
+        <result column="state" property="state"/>
+        <result column="export_city" property="exportCity"/>
+        <result column="replace_send" property="replaceSend"/>
+        <collection property="productInfoList" ofType="com.hgups.express.domain.param.UpdateOutboundProductInfo" autoMapping="true">
+            <result column="pid" property="id"/>
+        </collection>
+    </resultMap>
+
+    <select id="UpdateReplaceSendOutboundDetails" resultMap="updateReplaceSendOutboundDetails">
+        select o.*,op.*,pi.id pid,pi.* , (pi.inventory_number + op.product_number) number from
+            outbound o
+            inner join outbound_product op
+                on o.id=op.outbound_id
+            inner join product_info pi
+                on op.product_id=pi.id
+        where
+            o.id=#{id}
+            and op.outbound_id=#{id}
+            and op.product_id=pi.id
+    </select>
+
+
+</mapper>

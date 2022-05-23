@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hgups.express.mapper.MenuMapper">
+
+    <!-- 根据用户ID查询用户拥有的角色 -->
+    <select id="getMenuTwo" resultType="Role">
+        select * from menu where pid &lt;&gt; 0;
+    </select>
+
+    <resultMap id="menu" type="com.hgups.express.domain.param.MenuVo">
+        <id property="id" column="id1"></id>
+        <result property="name" column="name1"></result>
+        <result property="show" column="show1"></result>
+        <result property="pid" column="pid1"></result>
+        <collection property="child" ofType="com.hgups.express.domain.param.MenuTwoParam">
+            <id property="id" column="id2"></id>
+            <result property="name" column="name2"></result>
+            <result property="show" column="show2"></result>
+            <result property="pid" column="pid2"></result>
+            <collection property="child" ofType="com.hgups.express.domain.param.MenuThreeParam">
+                <id property="id" column="id3"></id>
+                <result property="name" column="name3"></result>
+                <result property="show" column="show3"></result>
+                <result property="pid" column="pid3"></result>
+            </collection>
+        </collection>
+    </resultMap>
+    <select id="getMenuList" resultMap="menu">
+        select m1.id id1,m1.name name1,m1.show show1,m1.pid pid1,
+        m2.id id2,m2.name name2,m2.show show2,m2.pid pid2,
+        m3.id id3,m3.name name3,m3.show show3,m3.pid pid3
+        from (
+            select * from menu
+            where pid = 0
+        )m1
+        left join menu m2 on m2.pid = m1.id
+        left join menu m3 on m3.pid = m2.id
+        order by m1.id,m2.id,m3.id
+    </select>
+
+</mapper>

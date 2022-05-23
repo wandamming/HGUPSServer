@@ -1,0 +1,1 @@
+export JAVA_OPTS="-d64 -server -Xms4g -Xmx4g -Xmn2g"

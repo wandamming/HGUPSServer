@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hgups.express.mapper.BigDataMapper">
+
+    <!--今日运单统计__总运单数-->
+    <select id="todayWayBillSumData" resultType="Integer">
+        select COUNT(*) from waybill
+        where
+        to_days(create_time)=to_days(now())
+        and
+        new_way_bill_id=-1
+    </select>
+
+    <!--今日运单统计__待发件数-->
+    <select id="todayWayBillUnSendData" resultType="Integer">
+        select COUNT(*) from waybill
+        where
+          to_days(create_time)=to_days(now())
+          and
+          (way_bill_trace='--' or way_bill_trace='' or way_bill_trace is null)
+          and new_way_bill_id=-1
+    </select>
+
+    <!--今日运单统计__已发件数-->
+    <select id="todayWayBillSendData" resultType="Integer">
+        select COUNT(*) from waybill
+        where
+        to_days(create_time)=to_days(now())
+        and
+        way_bill_trace&lt;&gt;'--'
+        and
+        new_way_bill_id=-1
+    </select>
+
+    <!--今日运单统计__问题件数-->
+    <select id="todayWayBillProblemData" resultType="Integer">
+        select COUNT(*) from waybill
+        where
+        to_days(create_time)=to_days(now())
+        AND
+        is_problem_parcel&lt;&gt;0
+        AND
+        new_way_bill_id=-1
+    </select>
+
+    <!--入境口岸对应的运单数量-->
+    <select id="getPortEntryWaybill" resultType="com.hgups.express.domain.param.AllProvinceWayBillParam">
+        select entry_site name,COUNT(*) value from waybill
+        where new_way_bill_id=-1 GROUP BY `entry_site`
+    </select>
+
+
+    <!--运单整体统计__今年累计运单数-->
+    <select id="yearWayBillData" resultType="Integer">
+        select COUNT(*) from waybill
+        where
+        YEAR(create_time)=YEAR(now())
+        and
+        new_way_bill_id=-1
+    </select>
+    <!--运单整体统计__本月累计运单数-->
+    <select id="monthWayBillData" resultType="Integer">
+        SELECT COUNT(*) FROM waybill
+        WHERE
+        DATE_FORMAT(create_time,'%Y%m')=DATE_FORMAT(CURDATE(),'%Y%m')
+        and
+        new_way_bill_id=-1
+    </select>
+    <!--运单整体统计__今年累计问题单数-->
+    <select id="yearWayBillProblemData" resultType="Integer">
+        select COUNT(*) from waybill
+        where
+        YEAR(create_time)=YEAR(now())
+        AND
+        is_problem_parcel&lt;&gt;0
+        AND
+        new_way_bill_id=-1
+    </select>
+    <!--运单整体统计__本月累计问题单数-->
+    <select id="monthWayBillProblemData" resultType="Integer">
+        select COUNT(*) from waybill
+        where
+        DATE_FORMAT(create_time,'%Y%m')=DATE_FORMAT(CURDATE(),'%Y%m')
+        AND
+        is_problem_parcel&lt;&gt;0
+        AND
+        new_way_bill_id=-1
+    </select>
+
+    <!--今日订单状态分析__已签收-->
+    <select id="todayWayBillSignData" resultType="Integer">
+        select COUNT(*) from waybill
+        where
+        to_days(create_time)=to_days(now())
+        and
+        way_bill_trace like concat('%','elivered','%')
+    </select>
+
+    <!--今日订单状态分析__待签收-->
+    <select id="todayWayBillAwaitSignData" resultType="Integer">
+        select COUNT(*) from waybill
+        where
+        to_days(create_time)=to_days(now())
+        and
+        (way_bill_trace&lt;&gt;'--' and way_bill_trace&lt;&gt;'' and way_bill_trace is not null)
+        and
+        way_bill_trace not like concat('%','elivered','%')
+    </select>
+
+    <!--今日订单状态分析__已退货-->
+    <select id="todayWayBillSalesReturnData" resultType="Integer">
+        select COUNT(*) from waybill
+        where
+        to_days(create_time)=to_days(now())
+        and
+        state=2
+        AND
+        new_way_bill_id=-1
+    </select>
+
+    <!--近七天运单数据-->
+    <select id="getWeekBillStatistics" resultType="com.hgups.express.domain.param.WeekBillStatisticsVo">
+        select create_time time,COUNT(*) value from waybill
+        where
+        date_sub(CURDATE(),INTERVAL 7 DAY)&lt; DATE(create_time)
+        and
+        new_way_bill_id=-1
+        group by DATE_FORMAT( create_time, '%Y-%m-%d')
+        order by create_time ASC
+    </select>
+
+</mapper>

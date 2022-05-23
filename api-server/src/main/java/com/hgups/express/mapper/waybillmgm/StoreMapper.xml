@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hgups.express.mapper.StoreMapper">
+    <select id="getStoreList" resultType="com.hgups.express.domain.vo.StoreVo">
+        SELECT s.id ,s.name,p.name platformName,director,telephone,state,create_time
+        FROM store s,platform p
+        where s.platform_id = p.id
+            <if test="storeName != null">
+                and s.name like concat('%',#{storeName},'%')
+            </if>
+            <if test="platformId != null">
+                and p.id = #{platformId}
+            </if>
+            <if test="state != null">
+                and state = #{state}
+            </if>
+            <if test="authorizeState != null">
+                and authorization_state = #{authorizeState}
+            </if>
+
+        order by create_time desc
+    </select>
+
+
+    <select id="getStoreListCount" resultType="Integer">
+        select count(*)
+        FROM store s,platform p
+        where s.platform_id = p.id
+        <if test="storeName != null">
+            and s.name like concat('%',#{storeName},'%')
+        </if>
+        <if test="platformId != null">
+            and p.id = #{platformId}
+        </if>
+        <if test="state != null">
+            and state = #{state}
+        </if>
+        <if test="authorizeState != null">
+            and authorization_state = #{authorizeState}
+        </if>
+
+    </select>
+
+    <update id="removeAuthorization">
+       UPDATE store
+       SET authorization_state=4
+       WHERE id=#{id}
+    </update>
+
+
+    <select id="exportStoreList" resultType="com.hgups.express.domain.vo.StoreVo">
+        SELECT s.id ,s.name,p.name platformName,director,telephone,state,create_time
+        FROM store s
+        INNER JOIN platform p ON s.platform_id = p.id
+        where s.id in
+        <foreach item="id" index="index" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <insert id="insertStore" keyProperty="id" useGeneratedKeys="true" parameterType="com.hgups.express.domain.Store">
+        INSERT INTO store (NAME,platform_id,director,vat,platform_account,amazonURL,store_type,subDomain)
+        values(#{storeName},#{platformId},#{storeDirector},#{vat},#{platformAccount},#{amazonURL},#{storeType},#{subDomain})
+    </insert>
+
+    <update id="changeState">
+       UPDATE store
+       SET state=CASE
+       WHEN state=1
+       THEN 2 ELSE 1
+       END
+       WHERE id=#{id}
+    </update>
+
+
+    <resultMap id="storeIdMap" type="java.util.HashMap">
+        <id column="id" property="id"  />
+        <result column="name" property="name"  />
+    </resultMap>
+
+    <select id="getStoreName" resultMap="storeIdMap">
+        select name  from store
+    </select>
+
+
+
+
+</mapper>

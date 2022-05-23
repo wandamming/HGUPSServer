@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hgups.express.mapper.RoleMapper">
+
+    <!-- 根据用户ID查询用户拥有的角色 -->
+    <select id="getRole" resultType="Role">
+        select t1.role_name,t1.id from role t1 inner join user_role t2 on(t1.id=t2.role_id)
+        where t2.user_id=#{userId}
+    </select>
+
+</mapper>

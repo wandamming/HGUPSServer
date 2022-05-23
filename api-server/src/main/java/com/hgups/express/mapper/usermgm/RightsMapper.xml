@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hgups.express.mapper.RightsMapper">
+
+    <!-- 根据用户ID查询用户拥有的角色 -->
+    <select id="userRoleMenuTwo" resultType="Menu">
+        SELECT * FROM menu WHERE type=2 AND id IN(SELECT menu_id FROM role_menu WHERE role_id IN(SELECT role_id FROM user_role WHERE user_id=#{userId}))
+    </select>
+
+    <select id="userRoleMenuOne" resultType="Menu">
+        SELECT * FROM menu WHERE type=1 AND id IN(SELECT menu_id FROM role_menu WHERE role_id IN(SELECT role_id FROM user_role WHERE user_id=#{userId}))
+    </select>
+
+    <select id="userRoleMenuThree" resultType="Menu">
+        SELECT * FROM menu WHERE type=3 AND id IN(SELECT menu_id FROM role_menu WHERE role_id IN(SELECT role_id FROM user_role WHERE user_id=#{userId}))
+    </select>
+
+    <select id="userRoleMenuButton" resultType="Menu">
+        SELECT * FROM menu WHERE type=0 AND id IN(SELECT menu_id FROM role_menu WHERE role_id IN(SELECT role_id FROM user_role WHERE user_id=#{userId}))
+    </select>
+
+</mapper>

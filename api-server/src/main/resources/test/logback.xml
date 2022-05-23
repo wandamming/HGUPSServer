@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property name="app.name" value="server"/>
+    <!--<include resource="org/springframework/boot/logging/logback/base.xml"/>-->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <property name="LOG_FILE" value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}}/spring.log}"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+    <include resource="org/springframework/boot/logging/logback/file-appender.xml"/>
+
+    <appender name="serverFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${server.home}/logs/${app.name}.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${server.home}/logs/${app.name}.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d [%thread] %-5level %logger{36} [%file : %line] - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="DEBUG">
+        <appender-ref ref="serverFile"/>
+    </root>
+</configuration>

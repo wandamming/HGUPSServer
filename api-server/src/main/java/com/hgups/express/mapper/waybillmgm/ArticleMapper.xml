@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hgups.express.mapper.ArticleMapper">
+
+    <select id="categoryGroup" resultType="String">
+        SELECT article_type FROM article GROUP BY article_type
+    </select>
+
+    <select id="itemGroup" resultType="String">
+        SELECT c_describe FROM article GROUP BY c_describe
+    </select>
+
+</mapper>

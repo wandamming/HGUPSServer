@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hgups.express.mapper.OrderInfoMapper">
+        <select id="getOrderInfo" resultType="com.hgups.express.domain.vo.OrderInfoVo">
+            SELECT o.id Id,platform_order_num platformOrderNum,p.name platform,
+                   s.name storeName,commerce_order_num commerceOrderNum,customer_name customerName,
+                   o.telephone telephone,order_state orderState,order_time orderTime
+            FROM order_info o ,platform p,store s,city c,channel ch,deliver_mode dm,order_type ot
+            WHERE o.platform_id = p.id
+            AND ordertype_id = ot.id
+            AND o.deliverymode_id = dm.id
+            AND channel_id = ch.id
+            AND city_id = c.id
+            <if test=" platformId!= null">
+                AND p.id = #{platformId}
+            </if>
+            <if test=" storeId!= null">
+                AND s.id= #{storeId}
+            </if>
+            <if test=" orderState!= null">
+                AND order_state = #{orderState}
+            </if>
+            AND sku = #{sku}
+            <if test=" customerName!= null">
+                AND customer_name = #{customerName}
+            </if>
+            <if test=" cityId!= null">
+                AND c.id = #{cityId}
+            </if>
+            <if test=" channelId!= null">
+                AND ch.id = #{channelId}
+            </if>
+            <if test=" deliveryModeId!= null">
+                AND dm.id = #{deliveryModeId}
+            </if>
+            <if test=" orderTypeId!= null">
+                AND ot.id = #{orderTypeId}
+            </if>
+            <if test=" orderStartTime!= null and orderEndTime!=null">
+                AND order_time BETWEEN #{orderStartTime} AND #{orderEndTime}
+            </if>
+            ORDER BY order_time DESC
+        </select>
+
+
+    <select id="getOrderInfoCount" resultType="Integer">
+        select count(*)
+        FROM order_info o ,platform p,store s,city c,channel ch,deliver_mode dm,order_type ot
+        WHERE o.platform_id = p.id
+        AND ordertype_id = ot.id
+        AND o.deliverymode_id = dm.id
+        AND channel_id = ch.id
+        AND city_id = c.id
+        <if test=" platformId!= null">
+            AND p.id = #{platformId}
+        </if>
+        <if test=" storeId!= null">
+            AND s.id= #{storeId}
+        </if>
+        <if test=" orderState!= null">
+            AND order_state = #{orderState}
+        </if>
+            AND sku = #{sku}
+        <if test=" customerName!= null">
+            AND customer_name = #{customerName}
+        </if>
+        <if test=" cityId!= null">
+            AND c.id = #{cityId}
+        </if>
+        <if test=" channelId!= null">
+            AND ch.id = #{channelId}
+        </if>
+        <if test=" deliveryModeId!= null">
+            AND dm.id = #{deliveryModeId}
+        </if>
+        <if test=" orderTypeId!= null">
+            AND ot.id = #{orderTypeId}
+        </if>
+        <if test=" orderStartTime!= null and orderEndTime!=null">
+            AND order_time BETWEEN #{orderStartTime} AND #{orderEndTime}
+        </if>
+
+    </select>
+
+    <select id="getOrderDetails" resultType="com.hgups.express.domain.vo.OrderDetailsVo">
+        select order_state orderState,platform_order_num platformOrderNum,commerce_order_num commerceOrderNum,
+               order_time orderTime,p.name platform,se.name sender,o.telephone telephone,c.city_cname deliverCity,
+               se.address_two specificAddress,se.postal_codet postalCode,ch.channel_name channel,dt.route deliverRoute
+        from  order_info o,platform p,store s,city c,channel ch,deliver_mode dm,order_type ot,sender se,deliver_route dt
+        WHERE o.platform_id = p.id
+        AND store_id = s.id
+        AND city_id = c.id
+        AND o.channel_id = ch.id
+        AND o.deliverymode_id = dm.id
+        AND o.ordertype_id = ot.id
+        AND o.sender_id = se.id
+        AND o.deliverRoute_id = dt.id
+        AND o.channel_id = ch.id
+        <if test="id!= null">
+            AND o.id = #{id}
+        </if>
+
+    </select>
+
+    <delete id="deleteBatchOrder" parameterType="Integer">
+        DELETE FROM order_info
+        WHERE id IN
+        <foreach collection="id" item="id" index="no" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+
+
+
+
+<!--导出订单-->
+    <resultMap id="cusList" type="com.hgups.express.domain.vo.ExportOrderVo">
+        <association  property="orderInfo" javaType="com.hgups.express.domain.OrderInfo" autoMapping="false">
+            <id column="o.id" property="id"/>
+            <result column="platformOrderNum" property="platformOrderNum"/>
+            <result column="commerceOrderNum" property="commerceOrderNum"/>
+            <result column="customerName" property="customerName"/>
+            <result column="telephone" property="telephone"/>
+            <result column="orderState" property="orderState"/>
+            <result column="orderTime" property="orderTime"/>
+        </association>
+        <association property="store" javaType="com.hgups.express.domain.Store">
+            <result column="storeName" property="name"/>
+        </association>
+        <association property="platform" javaType="com.hgups.express.domain.Platform">
+            <result column="platform" property="name"/>
+        </association>
+        <association property="channel" javaType="com.hgups.express.domain.Channel">
+            <result column="channelName" property="channelName"/>
+        </association>
+        <association  property="deliverRoute" javaType="com.hgups.express.domain.DeliverRoute">
+            <result column="route" property="route"/>
+        </association>
+        <association  property="sender" javaType="com.hgups.express.domain.Sender">
+            <result column="sender.name" property="name"/>
+            <result column="sender.phone" property="phone"/>
+            <result column="cityCname" property="cityCname"/>
+            <result column="addressTwo" property="addressTwo"/>
+            <result column="postalCode" property="postalCode"/>
+        </association>
+        <collection property="productInfoList" ofType="com.hgups.express.domain.ProductInfo">
+            <result column="skuCode" property="skuCode"/>
+            <result column="imageUrl" property="imageUrl"/>
+            <result column="cName" property="cName"/>
+            <result column="eName" property="eName"/>
+            <result column="inventoryNumber" property="inventoryNumber"/>
+        </collection>
+    </resultMap>
+
+    <select id="exportOrderExcel" resultMap="cusList">
+        SELECT o.id,
+        platform_order_num platformOrderNum,
+        p.name platform,
+        s.name storeName,
+        commerce_order_num commerceOrderNum,
+        customer_name customerName,
+        o.telephone telephone,
+        order_state orderState,
+        order_time orderTime,
+        sender.name,
+        sender.phone phone,
+        sender.city_cname cityCname,
+        sender.address_two addressTwo,
+        sender.postal_code postalCode,
+        ch.channel_name channelName,
+        dr.route route,
+        sku_code skuCode,
+        pri.image_url imageUrl,
+        pri.c_name cName,
+        pri.e_name eName,
+        pri.inventory_number inventoryNumber
+        FROM order_info o ,platform p,store s,city c,channel ch,deliver_mode dm,order_type ot,sender,deliver_route dr,product_info pri,order_product op
+        WHERE o.platform_id = p.id
+        AND ordertype_id = ot.id
+        AND o.deliverymode_id = dm.id
+        AND o.channel_id = ch.id
+        AND dr.id = o.deliverRoute_id
+        AND city_id = c.id
+        AND o.store_id = s.id
+        AND o.sender_id = sender.id
+        AND o.id = op.order_id
+        AND op.product_id = pri.id
+        AND o.id in
+        <foreach item="id" index="index" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+
+    <select id="getOrderCostCount" resultType="Integer">
+        select count(*)
+        from
+            (SELECT oi.id id,platform_order_num platformOrderNum,customer_name customerName,
+               oi.telephone telephone,SUM(weight) weight,SUM(cost) cost
+        FROM deliver_route dr,order_info oi,product_info pi,order_product op,channel ch,city
+        WHERE oi.deliverRoute_id = dr.id
+          AND oi.id = op.order_id
+          AND op.product_id = pi.id
+          AND ch.id = dr.channel_id
+          AND city.id = oi.city_id
+          AND pi.sku_code like concat('%',#{sku},'%')
+          AND pi.c_name like concat('%',#{productName},'%')
+          AND city.city_cname like concat('%',#{city},'%')
+          AND dr.id in
+          <foreach collection="id" item="id" index="no" open="(" separator="," close=")">
+            #{id}
+          </foreach>
+          GROUP BY oi.id) as ordercost
+    </select>
+
+
+<!-- 费用预算-->
+    <resultMap id="deliverCostVo" type="com.hgups.express.domain.vo.OrderCostVo">
+        <result column="sku" property="sku"/>
+        <result column="goodsName" property="goodsName"/>
+        <result column="receivingCity" property="receivingCity"/>
+        <result column="totalCost" property="totalCost"/>
+        <result column="customerAccount" property="customerAccount"/>
+        <collection property="deliverCostVo" ofType="com.hgups.express.domain.vo.DeliverCostVo">
+            <id column="id" property="id"></id>
+            <result column="platformOrderNum" property="platformOrderNum"/>
+            <result column="customerName" property="customerName"/>
+            <result column="telephone" property="telephone"/>
+            <result column="weight" property="weight"/>
+            <result column="cost" property="cost"/>
+        </collection>
+    </resultMap>
+    <select id="getOrderCost" resultMap="deliverCostVo">
+        SELECT oi.id id,platform_order_num platformOrderNum,customer_name customerName,
+               oi.telephone telephone,SUM(weight) weight,SUM(cost) cost
+        FROM deliver_route dr,order_info oi,product_info pi,order_product op,channel ch,city
+        WHERE oi.deliverRoute_id = dr.id
+          AND oi.id = op.order_id
+          AND op.product_id = pi.id
+          AND ch.id = dr.channel_id
+          AND city.id = oi.city_id
+          AND pi.sku_code like concat('%',#{sku},'%')
+          AND pi.c_name like concat('%',#{productName},'%')
+          AND city.city_cname like concat('%',#{city},'%')
+          AND dr.id in
+          <foreach collection="id" item="id" index="no" open="(" separator="," close=")">
+            #{id}
+          </foreach>
+          GROUP BY oi.id
+
+    </select>
+
+
+
+
+</mapper>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hgups.express.mapper.InventoryDetailsMapper">
+
+
+    <resultMap id="inventoryDetails" type="com.hgups.express.domain.param.InventoryDetailsVo">
+        <result column="receipt_order" property="receiptOrder"/>
+        <result column="create_time" property="createTime"/>
+        <result column="arrive_time" property="arriveTime"/>
+        <result column="expect_time" property="expectTime"/>
+        <result column="sku_number" property="skuNumber"/>
+        <result column="receipt_number" property="receiptNumber"/>
+        <result column="arrive" property="arrive"/>
+        <result column="no_arrive" property="noArrive"/>
+        <result column="qualified" property="qualified"/>
+        <result column="no_qualified" property="noQualified"/>
+        <result column="refuse_reason" property="refuseReason"/>
+        <result column="username" property="customer"/>
+        <collection property="productInfoList" ofType="com.hgups.express.domain.param.InventoryDetailsSubsetVo" autoMapping="true">
+            <result column="ip_arrive" property="arrive"/>
+            <result column="ip_no_arrive" property="noArrive"/>
+            <result column="ip_qualified" property="qualified"/>
+            <result column="ip_no_qualified" property="noQualified"/>
+            <result column="ip_id" property="id"/>
+        </collection>
+    </resultMap>
+
+
+    <select id="getInventoryDetails" resultMap="inventoryDetails">
+        select *,
+               ip.arrive ip_arrive,
+               ip.no_arrive ip_no_arrive,
+               ip.qualified ip_qualified,
+               ip.no_qualified ip_no_qualified,
+               ip.id ip_id,
+               user.username
+        from
+            inventory i
+            inner join inventory_product ip
+                on i.id=ip.inventory_id
+            inner join product_info pi
+                on ip.product_id=pi.id
+            inner join user on i.user_id=user.id
+        where
+            i.id=#{id}
+            and ip.inventory_id=#{id}
+            and ip.product_id=pi.id
+    </select>
+</mapper>

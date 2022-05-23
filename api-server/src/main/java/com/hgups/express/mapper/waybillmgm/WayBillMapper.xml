@@ -1,0 +1,1051 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hgups.express.mapper.WayBillMapper">
+
+    <sql id="dealDetailSql">
+        SELECT w.id wid,
+               w2.tracking_number wnewTrackingNumber,
+               w.dhl_coding_url wdhlCodingUrl,
+               w.dhl_package_id wdhlPackageId,
+               w.channel wchannel,
+               w.tracking_number wtrackingNumber,
+               w.state wstate,
+               w.user_id wsuerId,
+               w.service wservice,
+               w.export_city wexportCity,
+               w.entry_site wentrySite,
+               w.price wprice,
+               w.sender_id wsenderId,
+               w.receive_id wreceiveId,
+               w.zone wzone,
+               w.comment_one wcommentOne,
+               w.comment_two wcommentTwo,
+               w.service_point_name wservicePointName,
+               w.create_time wcreateTime,
+               w.more_id wmoreId,
+               w.bill_weight wbillWeight,
+               w.ware_weight wwareWeight,
+               w.ware_weight_time wwareWeightTime,
+               w.shipping_batch_id wshippingBatchId,
+               w.user_batch_id wuserBatchId,
+               w.coding wcoding,
+               w.is_coding wisCoding,
+               w.sender_name wsenderName,
+               w.receive_name wreceiveName,
+               w.user_sacks_id wuserSacksId,
+               w.shipping_sacks_id wshippingSacksId,
+               w.port_id wportId,
+               w.carrier_route wcarrierRoute,
+               w.delivery_point wdeliveryPoint,
+               w.is_intercept wisIntercept,
+               w.is_problem_parcel wisProblemParcel,
+               w.ware_price wwarePrice,
+               w.intercept_time winterceptTime,
+               w.sp_event_state wspEventState,
+               w.has_ssf whasSSF,
+               w.new_tracking_number wnewTrackingNumber,
+               w.change_single_time wchangeSingleTime,
+               w.new_way_bill_id wnewWayBillId,
+               w.is_problem_solve wisProblemSolve,
+               w.user_waybill_price wuserWaybillPrice,
+               w.way_bill_trace wwayBillTrace,
+               pc.id pcId,
+               pc.port_title pcportTitle,
+               pc.port_state pcportState,
+               pc.port_id pcprotId,
+               pc.port_code pcportCode,
+               pc.con_name pcconName,
+               pc.con_company pcconCompany,
+               pc.con_countries pcconCountries,
+               pc.con_eprovince pcconEprovince,
+               pc.con_ecity pcconEcity,
+               pc.con_code pcconCode,
+               pc.con_address_one pcconAddressOne,
+               pc.con_address_two pcconAddressTwo,
+               pc.con_phone pcconPhone,
+               pc.con_email pcconEmail,
+               pc.con_phone_prefix pcconPhonePrefix,
+               pc.con_cprovince pcconCprovince,
+               pc.con_ccity pcconCcity,
+               pc.con_codet pcconCodet,
+               pc.user_id pcuserId,
+               pc.usps_name pcuspsName,
+               pc.usps_company pcuspsCompany,
+               pc.usps_countries pcuspsCountries,
+               pc.usps_eprovince pcuspsEprovince,
+               pc.usps_ecity pcuspsEcity,
+               pc.usps_code pcuspsCode,
+               pc.usps_address_one pcuspsAddressOne,
+               pc.usps_address_two pcuspsAddressTwo,
+               pc.usps_phone pcuspsPhone,
+               pc.usps_email pcuspsEmail,
+               pc.usps_phone_prefix pcuspsPhonePrefix,
+               pc.usps_cprovince pcuspsCprovince,
+               pc.usps_ccity pcuspsCcity,
+               pc.usps_codet pcuspsCodet,
+               pc.mid pcMid,
+               pc.crid pcCrid,
+               wbc.id wbcid,
+               wbc.sender_name wbcsenderName,
+               wbc.sender_company wbcsenderCompany,
+               wbc.sender_countries wbcsenderCountries,
+               wbc.sender_province wbcsenderProvince,
+               wbc.sender_city wbcsenderCity,
+               wbc.sender_postal_code wbcsenderPostalCode,
+               wbc.sender_postal_codet wbcsenderPostalCodet,
+               wbc.sender_address_one wbcsenderAddressOne,
+               wbc.sender_address_two wbcsenderAddressTwo,
+               wbc.sender_phone wbcsenderPhone,
+               wbc.sender_phone_prefix wbcsenderPhonePrefix,
+               wbc.sender_email wbcsenderEmail,
+               wbc.sender_carrier_route wbcsenderCarrierRoute,
+               wbc.sender_delivery_point wbcsenderDeliveryPoint,
+               wbc.receive_name wbcreceiveName,
+               wbc.receive_company wbcreceiveCompany,
+               wbc.receive_countries wbcreceiveCountries,
+               wbc.receive_province wbcreceiveProvince,
+               wbc.receive_city wbcreceiveCity,
+               wbc.receive_postal_code wbcreceivePostalCode,
+               wbc.receive_postal_codet wbcreceivePostalCodet,
+               wbc.receive_address_one wbcreceiveAddressOne,
+               wbc.receive_address_two wbcreceiveAddressTwo,
+               wbc.receive_phone wbcreceivePhone,
+               wbc.receive_phone_prefix wbcreceivePhonePrefix,
+               wbc.receive_email wbcreceiveEmail,
+               wbc.receive_carrier_route wbcreceiveCarrierRoute,
+               wbc.receive_delivery_point wbcreceiveDeliveryPoint,
+               wbc.way_bill_id wbcWayBillId,
+               p.id pid,
+               p.ware_weight pwareWeight,
+               p.bill_weight pbillWeight,
+               p.service pservice,
+               p.width pwidth,
+               p.lengths plengths,
+               p.height pheight,
+               p.parcel_shape pparcelShape,
+               p.itme_category pitmeCategory,
+               p.aritcle_describe paritcleDescribe,
+               p.comment_one pcommentOne,
+               p.comment_two pcommentTwo,
+               p.receivet_id preceivetId,
+               p.sender_id psenderId,
+               p.is_coubid pisCoubid,
+               p.is_soft pisSoft,
+               p.sacks_id psacksId,
+               p.is_sorting pisSorting,
+               p.label_type plabelType,
+               p.more_id pmoreId,
+               p.user_id puserId,
+               p.waybill_id pwaybillId,
+               a.id aid,
+               a.c_describe acdescribe,
+               a.e_describe aedescribe,
+               a.price aprice,
+               a.weight aweight,
+               a.number anumber,
+               a.place aplace,
+               a.hs_encode ahsEncode,
+               a.declaration adeclaration,
+               a.parcle_id aparcleId,
+               a.article_type aarticleType,
+               a.waybill_id awaybillId,
+               a.hs_encode ahsEncode,
+               a.hts_encode ahtsEncode
+
+        FROM  waybill w
+            LEFT JOIN  waybill w2 on w.new_way_bill_id=w2.id
+            JOIN parcel p ON w.id=p.waybill_id
+            JOIN waybill_contact wbc on w.id=wbc.way_bill_id
+            JOIN article a ON w.id=a.waybill_id
+            JOIN port_contact pc ON w.port_id=pc.id
+    </sql>
+
+
+
+    <resultMap id="cusList" type="com.hgups.express.vo.WayBillVo">
+        <id column="wid" property="wid"/>
+        <association  property="portContact" javaType="com.hgups.express.domain.PortContact" autoMapping="false">
+            <id column="pcid" property="id"/>
+            <result column="pcportTitle" property="portTitle"/>
+            <result column="pcportState" property="portState"/>
+            <result column="pcportId" property="portId"/>
+            <result column="pcportCode" property="portCode"/>
+            <result column="pcconName" property="conName"/>
+            <result column="pcconCompany" property="conCompany"/>
+            <result column="pcconCountries" property="conCountries"/>
+            <result column="pcconEprovince" property="conEprovince"/>
+            <result column="pcconEcity" property="conEcity"/>
+            <result column="pcconCode" property="conCode"/>
+            <result column="pcconAddressOne" property="conAddressOne"/>
+            <result column="pcconAddressTwo" property="conAddressTwo"/>
+            <result column="pcconPhone" property="conPhone"/>
+            <result column="pcconEmail" property="conEmail"/>
+            <result column="pcuserId" property="userId"/>
+            <result column="pcconPhonePrefix" property="conPhonePrefix"/>
+            <result column="pcconCprovince" property="conCprovince"/>
+            <result column="pcconCcity" property="conCcity"/>
+            <result column="pcconCodet" property="conCodet"/>
+            <result column="uspsName" property="uspsName"/>
+            <result column="uspsCompany" property="uspsCompany"/>
+            <result column="uspsCountries" property="uspsCountries"/>
+            <result column="uspsEprovince" property="uspsEprovince"/>
+            <result column="uspsEcity" property="uspsEcity"/>
+            <result column="uspsCode" property="uspsCode"/>
+            <result column="uspsAddressTwo" property="uspsAddressTwo"/>
+            <result column="uspsAddressOne" property="uspsAddressOne"/>
+            <result column="uspsPhone" property="uspsPhone"/>
+            <result column="uspsPhonePrefix" property="uspsPhonePrefix"/>
+            <result column="uspsEmail" property="uspsEmail"/>
+            <result column="uspsCprovince" property="uspsCprovince"/>
+            <result column="uspsCcity" property="uspsCcity"/>
+            <result column="uspsCodet" property="uspsCodet"/>
+            <result column="pcCrid" property="crid"/>
+            <result column="pcMid" property="mid"/>
+        </association>
+        <association property="waybillContact" javaType="com.hgups.express.domain.WaybillContact" autoMapping="false">
+            <id column="wbcid" property="id"/>
+            <result column="wbcsenderName" property="senderName"/>
+            <result column="wbcsenderCompany" property="senderCompany"/>
+            <result column="wbcsenderCountries" property="senderCountries"/>
+            <result column="wbcsenderProvince" property="senderProvince"/>
+            <result column="wbcsenderCity" property="senderCity"/>
+            <result column="wbcsenderPostalCode" property="senderPostalCode"/>
+            <result column="wbcsenderPostalCodet" property="senderPostalCodet"/>
+            <result column="wbcsenderAddressOne" property="senderAddressOne"/>
+            <result column="wbcsenderAddressTwo" property="senderAddressTwo"/>
+            <result column="wbcsenderPhone" property="senderPhone"/>
+            <result column="wbcsenderPhonePrefix" property="senderPhonePrefix"/>
+            <result column="wbcsenderEmail" property="senderEmail"/>
+            <result column="wbcsenderCarrierRoute" property="senderCarrierRoute"/>
+            <result column="wbcsenderDeliveryPoint" property="senderDeliveryPoint"/>
+            <result column="wbcreceiveName" property="receiveName"/>
+            <result column="wbcreceiveCompany" property="receiveCompany"/>
+            <result column="wbcreceiveCountries" property="receiveCountries"/>
+            <result column="wbcreceiveProvince" property="receiveProvince"/>
+            <result column="wbcreceiveCity" property="receiveCity"/>
+            <result column="wbcreceivePostalCode" property="receivePostalCode"/>
+            <result column="wbcreceivePostalCodet" property="receivePostalCodet"/>
+            <result column="wbcreceiveAddressOne" property="receiveAddressOne"/>
+            <result column="wbcreceiveAddressTwo" property="receiveAddressTwo"/>
+            <result column="wbcreceivePhone" property="receivePhone"/>
+            <result column="wbcreceivePhonePrefix" property="receivePhonePrefix"/>
+            <result column="wbcreceiveEmail" property="receiveEmail"/>
+            <result column="wbcreceiveCarrierRoute" property="receiveCarrierRoute"/>
+            <result column="wbcreceiveDeliveryPoint" property="receiveDeliveryPoint"/>
+        </association>
+        <association property="parcel" javaType="com.hgups.express.domain.Parcel" autoMapping="false">
+            <id column="pid" property="id"/>
+            <result column="pwareWeight" property="wareWeight"/>
+            <result column="pbillWeight" property="billWeight"/>
+            <result column="pservice" property="service"/>
+            <result column="pwidth" property="width"/>
+            <result column="plengths" property="lengths"/>
+            <result column="pheight" property="height"/>
+            <result column="pparcelShape" property="parcelShape"/>
+            <result column="pitmeCategory" property="itmeCategory"/>
+            <result column="paritcleDescribe" property="aritcleDescribe"/>
+            <result column="pcommentOne" property="commentOne"/>
+            <result column="pcommentTwo" property="commentTwo"/>
+            <result column="preceivetId" property="receivetId"/>
+            <result column="psenderId" property="senderId"/>
+            <result column="pisCoubid" property="isCoubid"/>
+            <result column="pisSoft" property="isSoft"/>
+            <result column="psacksId" property="sacksId"/>
+            <result column="pisSorting" property="isSorting"/>
+            <result column="plabelType" property="labelType"/>
+            <result column="pmoreId" property="moreId"/>
+            <result column="puserId" property="userId"/>
+            <result column="pwaybillId" property="waybillId"/>
+        </association>
+        <association property="wayBill" javaType="com.hgups.express.domain.WayBill">
+            <id column="wid" property="id"/>
+            <result column="wchannel" property="channel"/>
+            <result column="wdhlCodingUrl" property="dhlCodingUrl"/>
+            <result column="wdhlPackageId" property="dhlPackageId"/>
+            <result column="wtrackingNumber" property="trackingNumber"/>
+            <result column="wstate" property="state"/>
+            <result column="wuserId" property="userId"/>
+            <result column="wservice" property="service"/>
+            <result column="wentrySite" property="entrySite"/>
+            <result column="wexportCity" property="exportCity"/>
+            <result column="wprice" property="price"/>
+            <result column="wsenderId" property="senderId"/>
+            <result column="wreceiveId" property="receiveId"/>
+            <result column="wzone" property="zone"/>
+            <result column="wcommentOne" property="commentOne"/>
+            <result column="wcommentTwo" property="commentTwo"/>
+            <result column="wservicePointName" property="servicePointName"/>
+            <result column="wcreateTime" property="createTime"/>
+            <result column="wmoreId" property="moreId"/>
+            <result column="wbillWeight" property="billWeight"/>
+            <result column="wwareWeight" property="wareWeight"/>
+            <result column="wwareWeightTime" property="wareWeightTime"/>
+            <result column="wshippingBatchId" property="shippingBatchId"/>
+            <result column="wuserBatchId" property="userBatchId"/>
+            <result column="wcoding" property="coding"/>
+            <result column="wisCoding" property="isCoding"/>
+            <result column="wsenderName" property="senderName"/>
+            <result column="wreceiveName" property="receiveName"/>
+            <result column="wuserSacksId" property="userSacksId"/>
+            <result column="wshippingSacksId" property="shippingSacksId"/>
+            <result column="wportId" property="portId"/>
+            <result column="wcarrierRoute" property="carrierRoute"/>
+            <result column="wdeliveryPoint" property="deliveryPoint"/>
+            <result column="wisProblemParcel" property="isProblemParcel"/>
+            <result column="wwarePrice" property="warePrice"/>
+            <result column="winterceptTime" property="interceptTime"/>
+            <result column="wspEventState" property="spEventState"/>
+            <result column="whasSSF" property="hasSSF"/>
+            <result column="wnewTrackingNumber" property="newTrackingNumber"/>
+            <result column="wchangeSingleTime" property="changeSingleTime"/>
+            <result column="wnewWayBillId" property="newWayBillId"/>
+            <result column="wisProblemSolve" property="isProblemSolve"/>
+            <result column="wuserWaybillPrice" property="userWaybillPrice"/>
+            <result column="wwayBillTrace" property="wayBillTrace"/>
+        </association>
+        <collection property="articleList" ofType="com.hgups.express.domain.Article" autoMapping="false">
+            <id column="aid" property="id"/>
+            <result column="acdescribe" property="cDescribe"/>
+            <result column="aedescribe" property="eDescribe"/>
+            <result column="aprice" property="price"/>
+            <result column="aweight" property="weight"/>
+            <result column="anumber" property="number"/>
+            <result column="aplace" property="place"/>
+            <result column="ahsEncode" property="hsEncode"/>
+            <result column="adeclaration" property="declaration"/>
+            <result column="aparcleId" property="parcleId"/>
+            <result column="aarticleType" property="articleType"/>
+            <result column="awaybillId" property="waybillId"/>
+            <result column="ahtsEncode" property="htsEncode"/>
+            <result column="ahsEncode" property="hsEncode"/>
+        </collection>
+    </resultMap>
+
+    <!--获取单条运单详情-->
+    <select id="getWayBillDetails" resultMap="cusList">
+        <include refid="dealDetailSql"></include>
+        WHERE w.id=#{wid}
+    </select>
+
+
+
+    <!--获取用户麻袋 or 批次总金额-->
+    <select id="getSumPrice" resultType="Float">
+        SELECT COALESCE(SUM(price),0) from waybill where 1=1
+        <if test="sacksId != 0 and sacksId != null">and user_sacks_id=#{sacksId}</if>
+        <if test="batchId != 0 and batchId != null">and user_batch_id=#{batchId}</if>
+        <if test="userId != 0 and userId != null">and user_id=#{userId}</if>
+    </select>
+
+    <!--获取用户麻袋 or 批次总金额-->
+    <select id="getShippingSumPrice" resultType="Float">
+        SELECT COALESCE(SUM(price),0) from waybill where 1=1
+        <if test="sacksId != 0 and sacksId != null">and shipping_sacks_id=#{sacksId}</if>
+        <if test="batchId != 0 and batchId != null">and shipping_batch_id=#{batchId}</if>
+    </select>
+
+    <!--获取多条运单详情-->
+    <select id="getWayBillDetailsList" resultMap="cusList">
+        SELECT
+        w.id wid,
+        w.user_waybill_price wuserWaybillPrice,
+        w.ware_price wwarePrice,
+        w.carrier_route wcarrierRoute,
+        w.service wservice,
+        w.bill_weight wbillWeight,
+        w.ware_weight wwareWeight,
+        w.zone wzone,
+        w.delivery_point wdeliveryPoint,
+        w.create_time wcreateTime,
+        w.tracking_number wtrackingNumber,
+        w.new_tracking_number wnewtrackingNumber,
+        w.new_way_bill_id wnewWayBillId,
+        w.price wprice,
+        pc.id pcId,
+        pc.port_title pcportTitle,
+        pc.port_state pcportState,
+        pc.port_id pcprotId,
+        pc.port_code pcportCode,
+        pc.con_name pcconName,
+        pc.con_company pcconCompany,
+        pc.con_countries pcconCountries,
+        pc.con_eprovince pcconEprovince,
+        pc.con_ecity pcconEcity,
+        pc.con_code pcconCode,
+        pc.con_address_one pcconAddressOne,
+        pc.con_address_two pcconAddressTwo,
+        pc.con_phone pcconPhone,
+        pc.con_email pcconEmail,
+        pc.con_phone_prefix pcconPhonePrefix,
+        pc.con_cprovince pcconCprovince,
+        pc.con_ccity pcconCcity,
+        pc.con_codet pcconCodet,
+        pc.user_id pcuserId,
+        pc.usps_name pcuspsName,
+        pc.usps_company pcuspsCompany,
+        pc.usps_countries pcuspsCountries,
+        pc.usps_eprovince pcuspsEprovince,
+        pc.usps_ecity pcuspsEcity,
+        pc.usps_code pcuspsCode,
+        pc.usps_address_one pcuspsAddressOne,
+        pc.usps_address_two pcuspsAddressTwo,
+        pc.usps_phone pcuspsPhone,
+        pc.usps_email pcuspsEmail,
+        pc.usps_phone_prefix pcuspsPhonePrefix,
+        pc.usps_cprovince pcuspsCprovince,
+        pc.usps_ccity pcuspsCcity,
+        pc.usps_codet pcuspsCodet,
+        pc.mid pcMid,
+        pc.crid pcCrid,
+        wbc.sender_name wbcsenderName,
+        wbc.sender_company wbcsenderCompany,
+        wbc.sender_countries wbcsenderCountries,
+        wbc.sender_province wbcsenderProvince,
+        wbc.sender_city wbcsenderCity,
+        wbc.sender_postal_code wbcsenderPostalCode,
+        wbc.sender_postal_codet wbcsenderPostalCodet,
+        wbc.sender_address_one wbcsenderAddressOne,
+        wbc.sender_address_two wbcsenderAddressTwo,
+        wbc.sender_phone wbcsenderPhone,
+        wbc.sender_phone_prefix wbcsenderPhonePrefix,
+        wbc.receive_name wbcreceiveName,
+        wbc.receive_company wbcreceiveCompany,
+        wbc.receive_countries wbcreceiveCountries,
+        wbc.receive_province wbcreceiveProvince,
+        wbc.receive_city wbcreceiveCity,
+        wbc.receive_postal_code wbcreceivePostalCode,
+        wbc.receive_postal_codet wbcreceivePostalCodet,
+        wbc.receive_address_one wbcreceiveAddressOne,
+        wbc.receive_address_two wbcreceiveAddressTwo,
+        wbc.receive_phone wbcreceivePhone,
+        wbc.receive_phone_prefix wbcreceivePhonePrefix,
+        p.bill_weight pbillWeight,
+        p.width pwidth,
+        p.lengths plengths,
+        p.height pheight,
+        p.parcel_shape pparcelShape,
+        p.itme_category pitmeCategory,
+        p.aritcle_describe paritcleDescribe,
+        p.comment_one pcommentOne,
+        p.comment_two pcommentTwo,
+        p.is_coubid pisCoubid,
+        p.is_soft pisSoft,
+        a.c_describe acdescribe,
+        a.e_describe aedescribe,
+        a.price aprice,
+        a.weight aweight,
+        a.number anumber,
+        a.place aplace,
+        a.hs_encode ahsEncode,
+        a.declaration adeclaration
+        FROM  waybill w
+        JOIN parcel p ON w.id=p.waybill_id
+        JOIN waybill_contact wbc on w.id=wbc.way_bill_id
+        JOIN article a ON w.id=a.waybill_id
+        JOIN port_contact pc ON w.port_id=pc.id
+        WHERE w.id in
+        <foreach item="wid" index="index" collection="wids" open="(" separator="," close=")">
+            #{wid}
+        </foreach>
+    </select>
+
+    <!--获取多条运单详情(根据航运批次ID)-->
+  <!--  <select id="getWayBillDetailsByBatchId" resultMap="cusList">
+        <include refid="dealDetailSql"></include>
+        where w.shipping_batch_id=#{batchId}
+    </select>-->
+
+
+<!--航运运单历史查询-->
+    <select id="allWayBill" parameterType="com.hgups.express.domain.param.ShippingWayBillParam" resultType="ShippingWayBillListParam">
+        SELECT
+            w.id,
+            w.channel,
+            w.tracking_number,
+            w.new_tracking_number,
+            w.new_way_bill_id,
+            w.state,
+            w.user_id,
+            w.service,
+            w.export_city,
+            w.entry_site,
+            w.price,
+            w.sender_id,
+            w.receive_id,
+            w.zone,
+            w.comment_one,
+            w.comment_two,
+            w.service_point_name,
+            w.create_time,
+            w.more_id,
+            w.bill_weight,
+            w.ware_weight,
+            w.ware_weight_time,
+            w.shipping_batch_id,
+            w.user_batch_id,
+            w.is_coding,
+            w.sender_name,
+            w.receive_name,
+            w.user_sacks_id,
+            w.shipping_sacks_id,
+            w.port_id,
+            w.carrier_route,
+            w.delivery_point,
+            w.is_intercept,
+            w.is_problem_parcel,
+            w.way_bill_trace,
+            w.ware_price,
+            u.username username FROM waybill w inner join waybill_contact wc on w.id=wc.way_bill_id inner join user u on u.id=w.user_id where 1=1
+        <if test="isTrackingNumber==1">
+            and w.tracking_number in
+            <foreach item="trackingNumber" index="index" collection="trackingNumbers" open="(" separator="," close=")">
+                #{trackingNumber}
+            </foreach>
+        </if>
+        <if test="isShippingSacksNumber==1">
+            and w.shipping_sacks_id in
+            (select id from shipping_sacks where sacks_number in
+            <foreach item="sacksNumber" index="index" collection="shippingSacksNumbers" open="(" separator="," close=")">
+                #{sacksNumber}
+            </foreach>
+            )
+        </if>
+        <if test="createTimeBegin!=null and createTimeBegin!='' and createTimeEnd!=null and createTimeEnd!=''">
+            and w.create_time &gt;=#{createTimeBegin} and w.create_time &lt;=#{createTimeEnd}
+        </if>
+        <if test="wareTimeBegin!=null and wareTimeBegin!='' and wareTimeEnd!=null and wareTimeEnd!=''">
+            and w.ware_weight_time &gt;=#{wareTimeBegin} and w.ware_weight_time &lt;=#{wareTimeEnd}
+        </if>
+        <if test="service!=null and service!=''">
+            and w.service=#{service}
+        </if>
+        <if test="userId!=0 and userId!='' and userId!=null">
+            and w.user_id=#{userId}
+        </if>
+        <if test="channel!=null and channel!=''">
+            and w.channel=#{channel}
+        </if>
+        <if test="entrySite!=null and entrySite!=''">
+            and w.entry_site=#{entrySite}
+        </if>
+        <if test="shippingBatchNumber!=0 and shippingBatchNumber!=null">
+            and w.shipping_batch_id=(select id from shipping_batch where tracking_number=#{shippingBatchNumber})
+        </if>
+        <if test="userBatchNumber!=0 and userBatchNumber!=null">
+            and w.user_batch_id=(select id from user_batch where tracking_number=#{userBatchNumber})
+        </if>
+        <if test="state!=0 and state!='' and state!=null">
+            and w.state=#{state}
+        </if>
+        <if test="isIntoSacks=='1'">
+            and w.shipping_sacks_id>0
+        </if>
+        <if test="isIntoSacks=='2'">
+            and w.shipping_sacks_id=0
+        </if>
+        <if test="isCoding==1">
+            and w.is_coding=1
+        </if>
+        <if test="isCoding==2">
+            and w.is_coding=0
+        </if>
+        <if test="singleComment!=null and singleComment!=''">
+            and (w.comment_one like concat('%',#{singleComment},'%') or w.comment_two like concat('%',#{singleComment},'%'))
+        </if>
+        <if test="receiveInfo!=null and receiveInfo!=''">
+            and (wc.receive_name like concat('%',#{receiveInfo},'%') or wc.receive_address_two like concat('%',#{receiveInfo},'%'))
+        </if>
+        ORDER BY w.id DESC LIMIT #{current},#{size}
+    </select>
+
+    <update id="updateSSF">
+        UPDATE waybill SET has_ssf = #{ssf} WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="updateSpEventState">
+        UPDATE waybill SET sp_event_state = #{state} WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <!--航运运单历史查询总条数-->
+    <select id="countWayBill" parameterType="com.hgups.express.domain.param.ShippingWayBillParam" resultType="Integer">
+        SELECT COUNT(w.id) FROM waybill w inner join waybill_contact wc on w.id=wc.way_bill_id inner join user u on u.id=w.user_id where 1=1
+        <if test="isTrackingNumber==1">
+            and w.tracking_number in
+            <foreach item="trackingNumber" index="index" collection="trackingNumbers" open="(" separator="," close=")">
+                #{trackingNumber}
+            </foreach>
+        </if>
+        <if test="isShippingSacksNumber==1">
+            and w.shipping_sacks_id in
+            (select id from shipping_sacks where sacks_number in
+            <foreach item="sacksNumber" index="index" collection="shippingSacksNumbers" open="(" separator="," close=")">
+                #{sacksNumber}
+            </foreach>
+            )
+        </if>
+        <if test="createTimeBegin!=null and createTimeBegin!='' and createTimeEnd!=null and createTimeEnd!=''">
+            and w.create_time &gt;=#{createTimeBegin} and w.create_time &lt;=#{createTimeEnd}
+        </if>
+        <if test="wareTimeBegin!=null and wareTimeBegin!='' and wareTimeEnd!=null and wareTimeEnd!=''">
+            and w.ware_weight_time &gt;=#{wareTimeBegin} and w.ware_weight_time &lt;=#{wareTimeEnd}
+        </if>
+        <if test="service!=null and service!=''">
+            and w.service=#{service}
+        </if>
+        <if test="userId!=0 and userId!='' and userId!=null">
+            and w.user_id=#{userId}
+        </if>
+        <if test="entrySite!=null and entrySite!=''">
+            and w.entry_site=#{entrySite}
+        </if>
+        <if test="shippingBatchNumber!=0 and shippingBatchNumber!=null">
+            and w.shipping_batch_id=(select id from shipping_batch where tracking_number=#{shippingBatchNumber})
+        </if>
+        <if test="userBatchNumber!=0 and userBatchNumber!=null">
+            and w.user_batch_id=(select id from user_batch where tracking_number=#{userBatchNumber})
+        </if>
+        <if test="state!=0 and state!='' and state!=null">
+            and w.state=#{state}
+        </if>
+        <if test="isIntoSacks=='1'">
+            and w.shipping_sacks_id>0
+        </if>
+        <if test="isIntoSacks=='2'">
+            and w.shipping_sacks_id=0
+        </if>
+        <if test="isCoding==1">
+            and w.is_coding=1
+        </if>
+        <if test="isCoding==2">
+            and w.is_coding=0
+        </if>
+        <if test="singleComment!=null and singleComment!=''">
+            and (w.comment_one like concat('%',#{singleComment},'%') or w.comment_two like concat('%',#{singleComment},'%'))
+        </if>
+        <if test="receiveInfo!=null and receiveInfo!=''">
+            and (wc.receive_name like concat('%',#{receiveInfo},'%') or wc.receive_address_two like concat('%',#{receiveInfo},'%'))
+        </if>
+    </select>
+
+    <resultMap id="problemList" type="com.hgups.express.domain.param.ProblemWayBillVo">
+        <collection property="wayBill" ofType="com.hgups.express.domain.WayBill" autoMapping="true">
+        </collection>
+        <collection property="shippingBatch" ofType="com.hgups.express.domain.ShippingBatch" autoMapping="true">
+        </collection>
+    </resultMap>
+
+    <!--问题包裹运单列表-->
+    <select id="getProblemWayBill" resultType="WayBill">
+        SELECT w.*,u.username from waybill w inner join user u on w.user_id=u.id WHERE 1=1
+        <if test="processUserId!=null">
+            and w.user_id=#{processUserId}
+        </if>
+        <if test="isTrackingNumber==1">
+            and w.tracking_number in
+            <foreach item="trackingNumber" index="index" collection="trackingNumbers" open="(" separator="," close=")">
+                #{trackingNumber}
+            </foreach>
+        </if>
+        <if test="createTimeBegin!=null and createTimeBegin!='' and createTimeEnd!=null and createTimeEnd!=''">
+            and w.create_time &gt;=#{createTimeBegin} and w.create_time &lt;=#{createTimeEnd}
+        </if>
+        <if test="isProblemParcel==-1">
+            and w.is_problem_parcel &lt;&gt;#{isProblemParcel}
+        </if>
+        <if test="isProblemParcel!=-1">
+            AND w.is_problem_parcel=#{isProblemParcel}
+        </if>
+        AND (w.is_problem_solve=1 or w.is_problem_solve=2) ORDER BY id DESC LIMIT #{current},#{size}
+    </select>
+
+    <!--问题包裹运单总数-->
+    <select id="getProblemWayBillCount" resultType="Integer">
+        SELECT count(w.id) from waybill w inner join user u on w.user_id=u.id WHERE 1=1
+        <if test="processUserId!=null">
+            and w.user_id=#{processUserId}
+        </if>
+        <if test="isTrackingNumber==1">
+            and w.tracking_number in
+            <foreach item="trackingNumber" index="index" collection="trackingNumbers" open="(" separator="," close=")">
+                #{trackingNumber}
+            </foreach>
+        </if>
+        <if test="createTimeBegin!=null and createTimeBegin!='' and createTimeEnd!=null and createTimeEnd!=''">
+            and w.create_time &gt;=#{createTimeBegin} and w.create_time &lt;=#{createTimeEnd}
+        </if>
+        <if test="isProblemParcel==-1">
+            and w.is_problem_parcel &lt;&gt;#{isProblemParcel}
+        </if>
+        <if test="isProblemParcel!=-1">
+            AND w.is_problem_parcel=#{isProblemParcel}
+        </if>
+        AND (w.is_problem_solve=1 or w.is_problem_solve=2)
+    </select>
+
+
+    <!--跟换面单运单列表-->
+    <select id="getChangeSingle" resultType="WayBillAndUserParam">
+        SELECT  w.id,w.tracking_number new_tracking_number,w.new_tracking_number tracking_number,w.service,w.ware_weight,w.change_single_time,w.state,u.username from waybill w inner join user u on w.user_id=u.id
+        WHERE 1=1
+        <if test="processUserId!=null">
+            and w.user_id=#{processUserId}
+        </if>
+        <if test="isTrackingNumber==1">
+            and w.new_tracking_number in
+            <foreach item="trackingNumber" index="index" collection="trackingNumbers" open="(" separator="," close=")">
+                #{trackingNumber}
+            </foreach>
+        </if>
+        <if test="changeSingleTimeBegin!=null and changeSingleTimeBegin!='' and changeSingleTimeEnd!=null and changeSingleTimeEnd!=''">
+            and w.change_single_time &gt;=#{changeSingleTimeBegin} and w.change_single_time &lt;=#{changeSingleTimeEnd}
+        </if>
+        <if test="userId!=0 and userId!='' and userId!=null">
+            and w.user_id=#{userId}
+        </if>
+        AND w.new_way_bill_id=-1 and new_tracking_number&lt;&gt;''
+        ORDER BY w.change_single_time DESC LIMIT #{current},#{size}
+    </select>
+
+    <!--跟换面单运单总数-->
+    <select id="getChangeSingleCount" resultType="Integer">
+        SELECT  count(w.id) from waybill w inner join user u on w.user_id=u.id
+        WHERE 1=1
+        <if test="processUserId!=null">
+            and w.user_id=#{processUserId}
+        </if>
+        <if test="isTrackingNumber==1">
+            and w.new_tracking_number in
+            <foreach item="trackingNumber" index="index" collection="trackingNumbers" open="(" separator="," close=")">
+                #{trackingNumber}
+            </foreach>
+        </if>
+        <if test="changeSingleTimeBegin!=null and changeSingleTimeBegin!='' and changeSingleTimeEnd!=null and changeSingleTimeEnd!=''">
+            and w.change_single_time &gt;=#{changeSingleTimeBegin} and w.change_single_time &lt;=#{changeSingleTimeEnd}
+        </if>
+        <if test="userId!=0 and userId!='' and userId!=null">
+            and w.user_id=#{userId}
+        </if>
+        AND w.new_way_bill_id=-1 and new_tracking_number&lt;&gt;''
+    </select>
+
+
+    <!--更换面单信息-->
+
+    <select id="getChangeSingleInfo" resultMap="cusList">
+        <include refid="dealDetailSql"></include>
+        WHERE w.id=#{wid}
+    </select>
+
+    <!--定时更新-->
+    <select id="getTimingModifyTrackNumbers" resultType="String">
+        select tracking_number from waybill
+        where
+            DATE_SUB(CURDATE(), INTERVAL 30 DAY) &lt;=create_time
+            and tracking_number not in(select tracking_number from waybill where way_bill_trace like concat('%','elivered','%'))
+            and is_problem_parcel=0
+    </select>
+
+    <select id="getShippingWayBillNumber" resultType="ShippingWayBillNumberVo">
+        select id,tracking_number,new_way_bill_id from waybill where shipping_batch_id=#{sid} and new_way_bill_id=-1
+    </select>
+
+    <!--根据物品类型获取运单核重价格总和-->
+    <select id="getCateGoryWarePrice" resultType="Double">
+        SELECT COALESCE(SUM(ware_price),0) FROM waybill WHERE id IN
+        <foreach item="wId" index="index" collection="wIds" open="(" separator="," close=")">
+            #{wId}
+        </foreach>
+    </select>
+    <!--根据物品类型获取运单核重重量总和-->
+    <select id="getCateGoryWareWeight" resultType="Double">
+        SELECT COALESCE(SUM(ware_weight),0) FROM waybill WHERE id IN
+        <foreach item="wId" index="index" collection="wIds" open="(" separator="," close=")">
+            #{wId}
+        </foreach>
+    </select>
+
+    <!--根据物品类型获取运单核重价格总和-->
+    <select id="getWareWeightByBatchId" resultType="Double">
+        SELECT COALESCE(SUM(ware_weight),0) FROM waybill w WHERE w.shipping_batch_id=(select id from shipping_batch b where b.tracking_number=#{trackNumber})
+    </select>
+
+    <!--根据运单ID返回运单编码-->
+    <select id="getWayBillCoding" resultType="String">
+        SELECT coding FROM waybill WHERE id IN
+        <foreach item="wId" index="index" collection="wIds" open="(" separator="," close=")">
+            #{wId}
+        </foreach>
+    </select>
+
+    <!--传入已经更换过面单的新单号获取旧单ID-->
+    <select id="getOldTrackingNumber" resultType="String">
+        SELECT new_tracking_number FROM waybill WHERE id IN
+        <foreach item="wId" index="index" collection="wids" open="(" separator="," close=")">
+            #{wId}
+        </foreach>
+        and new_tracking_number is not null
+    </select>
+
+    <!--根据单号获取ID-->
+    <select id="getIdByTrackingNumber" resultType="Integer">
+        SELECT id FROM waybill WHERE tracking_number IN
+        <foreach item="trackingNumber" index="index" collection="trackingNumbers" open="(" separator="," close=")">
+            #{trackingNumber}
+        </foreach>
+    </select>
+
+    <!--获取已跟换面单运单的新旧运单号-->
+    <select id="selectTrackingList" resultType="Waybill">
+        SELECT tracking_number,new_tracking_number FROM waybill WHERE `new_tracking_number` IS NOT NULL
+    </select>
+
+    <!--根据ID获取运单Coding-->
+    <select id="getCodingById" resultType="String">
+        SELECT coding FROM waybill WHERE id=#{wid}
+    </select>
+
+    <!--获取用户运单列表-->
+    <select id="getUserWayBillList" resultType="com.hgups.express.domain.WayBill">
+        SELECT
+        w.id,
+        w.channel,
+        w.tracking_number,
+        w.new_tracking_number,
+        w.new_way_bill_id,
+        w.state,
+        w.user_id,
+        w.service,
+        w.export_city,
+        w.entry_site,
+        w.price,
+        w.sender_id,
+        w.receive_id,
+        w.zone,
+        w.comment_one,
+        w.comment_two,
+        w.service_point_name,
+        w.create_time,
+        w.more_id,
+        w.bill_weight,
+        w.ware_weight,
+        w.ware_weight_time,
+        w.shipping_batch_id,
+        w.user_batch_id,
+        w.is_coding,
+        w.sender_name,
+        w.receive_name,
+        w.user_sacks_id,
+        w.shipping_sacks_id,
+        w.port_id,
+        w.carrier_route,
+        w.delivery_point,
+        w.is_intercept,
+        w.is_problem_parcel,
+        w.way_bill_trace,
+        w.ware_price
+        FROM waybill w where w.user_id=#{userId}
+        <if test="isTrackingNumbers !=0">
+            and w.tracking_number in
+            <foreach item="trackingNumber" index="index" collection="trackingNumbers" open="(" separator="," close=")">
+                #{trackingNumber}
+            </foreach>
+        </if>
+        <if test="channel !=null and channel!=''">
+            and w.channel=#{channel}
+        </if>
+        <if test="moreId!=null and moreId !=0">
+            and w.more_id=#{moreId}
+        </if>
+        <if test="state!=null and state !=0">
+            and w.state=#{state}
+        </if>
+        <if test="userBatchNumber !=null and userBatchNumber!=''">
+            and w.user_batch_id=(select id from user_batch where tracking_number=#{userBatchNumber})
+        </if>
+        <if test="createTimeBegin!=null and createTimeBegin!='' and createTimeEnd!=null and createTimeEnd!=''">
+            and w.create_time &gt;=#{createTimeBegin} and w.create_time &lt;=#{createTimeEnd}
+        </if>
+        ORDER BY w.id DESC LIMIT #{current},#{size}
+    </select>
+
+    <!--获取用户运单列表总数-->
+    <select id="getUserWayBillListCount" resultType="Integer">
+        SELECT count(*) FROM waybill w where w.user_id=#{userId}
+        <if test="isTrackingNumbers !=0">
+            and w.tracking_number IN
+            <foreach item="trackingNumber" index="index" collection="trackingNumbers" open="(" separator="," close=")">
+                #{trackingNumber}
+            </foreach>
+        </if>
+        <if test="channel !=null and channel!=''">
+            and w.channel=#{channel}
+        </if>
+        <if test="moreId!=null and moreId !=0">
+            and w.more_id=#{moreId}
+        </if>
+        <if test="state!=null and state !=0">
+            and w.state=#{state}
+        </if>
+        <if test="userBatchNumber !=null and userBatchNumber!=''">
+            and w.user_batch_id=(select id from user_batch where tracking_number=#{userBatchNumber})
+        </if>
+        <if test="createTimeBegin!=null and createTimeBegin!='' and createTimeEnd!=null and createTimeEnd!=''">
+            and w.create_time &gt;=#{createTimeBegin} and w.create_time &lt;=#{createTimeEnd}
+        </if>
+    </select>
+
+    <!--获取未加入用户批次运单信息列表-->
+    <select id="getNotIntoBatchWayBillList" resultType="com.hgups.express.domain.param.UserBatchWayBill">
+        SELECT tracking_number,price,comment_two,comment_one,create_time FROM waybill
+        where user_id=#{userId} and user_batch_id=0 and user_sacks_id=0 and state=1
+        order by id desc
+    </select>
+
+    <!--获取未加入用户批次运单信息总数-->
+    <select id="getNotIntoBatchWayBillListCount" resultType="Integer">
+        SELECT COUNT(*)FROM waybill
+        where user_id=#{userId} and user_batch_id=0 and user_sacks_id=0 and state=1
+        order by id desc
+    </select>
+
+    <!--获取未加入用户批次运单信息总数-->
+    <select id="getShippingBatchWayBillList" resultType="com.hgups.express.domain.WayBill">
+        SELECT * FROM waybill
+        where shipping_batch_id=0 and shipping_sacks_id=0 and state=1 and is_problem_parcel=0 and is_intercept=0
+        order by id desc
+    </select>
+
+    <!--获取未加入用户批次运单信息总数-->
+    <select id="getShippingBatchWayBillListCount" resultType="Integer">
+        SELECT COUNT(*) FROM waybill
+        where shipping_batch_id=0 and shipping_sacks_id=0 and state=1 and is_problem_parcel=0 and is_intercept=0
+        order by id desc
+    </select>
+
+    <!--获取未加入用户批次运单信息总数-->
+    <select id="getNotJoinWayBill" resultType="com.hgups.express.domain.WayBill">
+        SELECT * FROM waybill where shipping_sacks_id=0 and shipping_batch_id=0
+    </select>
+
+    <!--获取未加入用户批次运单信息总数-->
+    <select id="getNotJoinWayBillCount" resultType="Integer">
+        SELECT * FROM waybill where shipping_sacks_id=0 and shipping_batch_id=0
+    </select>
+
+
+    <!-- 获取一天之内该用户的运单总数-->
+    <select id="getAllWayBills" resultType="java.lang.Integer">
+         select count(*) from waybill w inner join user u
+         on w.user_id = u.id
+        <where>
+            <if test="userId!=null">
+                w.user_id=#{userId}
+            </if>
+        </where>
+         and datediff(current_timestamp,w.create_time) = 0;
+    </select>
+
+    <!-- 获取一天之内该用户的待发送单总数-->
+    <select id="getPendingWaybills" resultType="java.lang.Integer">
+         select count(*) from waybill w inner join user u
+         on w.user_id = u.id
+         <where>
+             <if test="userId!=null">
+                w.user_id=#{userId}
+             </if>
+         </where>
+         and datediff(current_timestamp,w.create_time) = 0
+         and w.state = 1;
+    </select>
+
+    <!-- 获取一天之内该用户的已发送单总数-->
+    <select id="getShippedWaybills" resultType="java.lang.Integer">
+         select count(*) from waybill w inner join user u
+         on w.user_id = u.id
+        <where>
+            <if test="userId!=null">
+                w.user_id=#{userId}
+            </if>
+        </where>
+         and datediff(current_timestamp,w.create_time) = 0
+         and w.state = 5;
+    </select>
+
+    <!-- 获取一天之内该用户的已签收单总数-->
+    <select id="getSignedWaybills" resultType="java.lang.Integer">
+         select count(*) from waybill w inner join user u
+         on w.user_id = u.id
+        <where>
+            <if test="userId!=null">
+                w.user_id=#{userId}
+            </if>
+        </where>
+         and datediff(current_timestamp,w.create_time) = 0
+         and w.state = 4;
+    </select>
+    <select id="getProblemWaybills" resultType="java.lang.Integer">
+        select count(*) from waybill w inner join user u
+        on w.user_id = u.id
+        <where>
+            <if test="userId!=null">
+                w.user_id=#{userId}
+            </if>
+        </where>
+        and datediff(current_timestamp,w.create_time) = 0
+        and is_problem_parcel!=0
+    </select>
+
+    <select id="getForecastPrice" resultType="java.math.BigDecimal">
+        select COALESCE(SUM(price),0) from waybill w inner join user u
+        on w.user_id = u.id
+        <where>
+            <if test="userId!=null">
+                w.user_id=#{userId}
+            </if>
+        </where>
+        and datediff(current_timestamp,w.create_time) = 0
+    </select>
+
+    <select id="getWarePrice" resultType="java.math.BigDecimal">
+        select COALESCE(SUM(ware_price),0) from waybill w inner join user u
+        on w.user_id = u.id
+        <where>
+            <if test="userId!=null">
+                w.user_id=#{userId}
+            </if>
+        </where>
+        and datediff(current_timestamp,w.create_time) = 0
+    </select>
+
+
+    <!--&lt;!&ndash;问题包裹运单总数&ndash;&gt;
+    <select id="getProblemWayBillCount" resultType="Integer">
+        SELECT count(w.id) from waybill w inner join user u on w.user_id=u.id WHERE 1=1
+        <if test="processUserId!=null">
+            and w.user_id=#{processUserId}
+        </if>
+        <if test="isTrackingNumber==1">
+            and w.tracking_number in
+            <foreach item="trackingNumber" index="index" collection="trackingNumbers" open="(" separator="," close=")">
+                #{trackingNumber}
+            </foreach>
+        </if>
+        <if test="createTimeBegin!=null and createTimeBegin!='' and createTimeEnd!=null and createTimeEnd!=''">
+            and w.create_time &gt;=#{createTimeBegin} and w.create_time &lt;=#{createTimeEnd}
+        </if>
+        <if test="isProblemParcel==-1">
+            and w.is_problem_parcel &lt;&gt;#{isProblemParcel}
+        </if>
+        <if test="isProblemParcel!=-1">
+            AND w.is_problem_parcel=#{isProblemParcel}
+        </if>
+        AND (w.is_problem_solve=1 or w.is_problem_solve=2)
+    </select>-->
+
+</mapper>

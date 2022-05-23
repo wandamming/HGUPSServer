@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hgups.express.mapper.WayBillContactMapper">
+
+    <select id="getWayBillProvince" resultType="com.hgups.express.domain.param.AllProvinceWayBillParam">
+        SELECT receive_province name,COUNT(1) value FROM waybill_contact GROUP BY receive_province
+    </select>
+
+    <select id="provinceGetCityWayBill" resultType="com.hgups.express.domain.param.AllProvinceWayBillParam">
+        SELECT receive_city name,COUNT(1) value FROM waybill_contact where receive_province=#{proName} GROUP BY receive_city
+    </select>
+
+    <select id="cityWayBill" resultType="com.hgups.express.domain.param.AllProvinceWayBillParam">
+        SELECT receive_city name,COUNT(1) value FROM waybill_contact where receive_city=#{cityName} GROUP BY receive_city
+    </select>
+
+    <select id="getCityWayBill" resultType="com.hgups.express.domain.dto.CityWaybillSum">
+        SELECT receive_city ,COUNT(receive_city) total FROM waybill_contact where receive_city IS NOT NUll AND receive_city != ''GROUP BY receive_city
+    </select>
+
+    <select id="countCityWayBill" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM waybill_contact where receive_city IS NOT NUll AND receive_city != ''
+    </select>
+
+</mapper>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hgups.express.mapper.SystemNoticeMapper">
+    <select id="systemNoticeList" resultType="com.hgups.express.domain.SystemNotice">
+        SELECT * FROM system_notice where 1=1
+        <if test="likes != null and likes != ''">or id like concat('%',#{likes},'%')</if>
+        <if test="likes != null and likes != ''">or synotice_content like concat('%',#{likes},'%')</if>
+        <if test="likes != null and likes != ''">or synotice_type like concat('%',#{likes},'%')</if>
+        <if test="likes != null and likes != ''">or synotice_time like concat('%',#{likes},'%')</if>
+        and id=#{Id}
+        ORDER BY id DESC LIMIT #{current},#{size}
+    </select>
+
+
+    <select id="getSystemNotice" resultType="com.hgups.express.domain.SystemNotice">
+        select id,
+        synotice_content,
+        s1.synotice_type,
+        synotice_time from system_notice s1 inner join synotice_types s2 on s1.type_id = s2.type_id
+        <where>
+            <if test="synoticeType != null">
+                s2.synotice_type = #{synoticeType}
+            </if>
+        </where>
+        order by synotice_time desc
+    </select>
+
+    <select id="getSynoticeTypeCount" resultType="Integer">
+        select count(*) from system_notice s1 inner join synotice_types s2 on s1.type_id = s2.type_id
+        <where>
+            <if test="synoticeType != null">
+                s2.synotice_type = #{synoticeType}
+            </if>
+        </where>
+
+    </select>
+
+
+
+
+    <delete id="deleteApiAccount" parameterType="Integer">
+        delete from system_notice where id=#{id}
+    </delete>
+
+
+
+</mapper>

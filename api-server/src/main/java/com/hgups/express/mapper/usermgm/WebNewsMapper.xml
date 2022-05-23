@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hgups.express.mapper.WebNewsMapper">
+    <!-- 官网后台莱读合伙人列表 -->
+    <select id="getApiNewsList"  resultType="com.hgups.express.domain.WebNews">
+        select *
+        from web_news
+        where 1=1
+        <if test="visible!=null">
+            AND visible = #{visible}
+        </if>
+        <if test="type!=null">
+            AND type = #{type}
+        </if>
+        order by rank desc,modified_time desc LIMIT #{pageIndex},#{pageSize}
+    </select>
+    <select id="getAPiCount" resultType="Integer">
+        select count(*)
+        from web_news
+        where 1=1
+        <if test="visible!=null">
+            AND visible = #{visible}
+        </if>
+        <if test="type!=null">
+            AND type = #{type}
+        </if>
+    </select>
+
+    <update id="updateVisible">
+        update web_news
+        set
+        visible = #{status}
+        where id in(
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
+
+    <!-- 官网前台莱读合伙人列表 -->
+    <select id="getWebNewsList"  resultType="com.hgups.express.domain.WebNews">
+        select *
+        from web_news
+        where 1=1 and visible = 1
+        <if test="type!=null">
+            AND type = #{type}
+        </if>
+        order by rank desc,modified_time desc LIMIT #{pageIndex},#{pageSize}
+    </select>
+    <select id="getCount" resultType="Integer">
+        select count(*)
+        from web_news
+        where 1=1 and visible = 1
+        <if test="type!=null">
+            AND type = #{type}
+        </if>
+    </select>
+</mapper>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hgups.express.mapper.OperateLogMapper">
+    <select id="getOperateLogList" resultType="com.hgups.express.vo.OperateLogVo">
+        select o.id, operate_time, username, module_name, operate_record
+        from (operate_log o inner join user u on o.user_id = u.id) inner join operate_module m on o.module_id = m.id
+        <where>
+            <if test="userId != null">
+                o.user_id=#{userId}
+            </if>
+            <if test="beginTime!=null and endTime!=null">
+                and operate_time between #{beginTime} and #{endTime}
+            </if>
+            <if test="moduleName != null">
+                and module_name = #{moduleName}
+            </if>
+        </where>
+        order by operate_time desc
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+        select count(*)
+        from (operate_log o inner join user u on o.user_id = u.id) inner join operate_module m on o.module_id = m.id
+        <where>
+        <if test="userId != null">
+            o.user_id=#{userId}
+        </if>
+        <if test="beginTime!=null and endTime!=null">
+            and operate_time between #{beginTime} and #{endTime}
+        </if>
+
+        <if test="moduleName != null">
+        and module_name = #{moduleName}
+        </if>
+        </where>
+
+    </select>
+
+    <resultMap id="userIdMap" type="java.util.HashMap">
+        <id column="id" property="id"  />
+        <result column="user_id" property="userId"  />
+    </resultMap>
+
+    <select id="getUserId" resultMap="userIdMap">
+        select user_id  from operate_log
+    </select>
+
+</mapper>

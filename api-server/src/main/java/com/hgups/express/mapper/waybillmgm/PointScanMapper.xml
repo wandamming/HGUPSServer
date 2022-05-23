@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hgups.express.mapper.PointScanMapper">
+
+    <select id="getPointScanByRoleId" resultType="com.hgups.express.domain.PointScan">
+        SELECT ps.id id,ps.scan_name scanName,ps.rank
+        FROM role r
+        INNER JOIN scan_role_middle srm ON r.id=srm.role_id
+        INNER JOIN point_scan ps ON srm.point_scan_id=ps.id
+        WHERE r.id IN
+        <foreach item="rid" index="index" collection="rids" open="(" separator="," close=")">
+            #{rid}
+        </foreach>
+        order by ps.rank
+    </select>
+
+</mapper>

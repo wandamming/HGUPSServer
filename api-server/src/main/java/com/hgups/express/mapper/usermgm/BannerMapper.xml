@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hgups.express.mapper.BannerMapper">
+    <!-- 官网后台banner列表 -->
+    <select id="getApiBannerList"  resultType="com.hgups.express.domain.Banner">
+        select *
+        from banner
+        where 1=1
+        <if test="type!=null">
+            AND type=#{type}
+        </if>
+        <if test="actionType!=null">
+            AND action_type=#{actionType}
+        </if>
+        <if test="isShow!=null">
+            AND is_show=#{isShow}
+        </if>
+        <if test="locationId!=null">
+            AND location_id=#{locationId}
+        </if>
+        <if test="module!=null">
+            AND module=#{module}
+        </if>
+        order by weight desc,update_time desc LIMIT #{current},#{size}
+    </select>
+    <select id="getCount" resultType="Integer">
+        select count(*)
+        from banner
+        where 1=1
+        <if test="type!=null">
+            AND type=#{type}
+        </if>
+        <if test="actionType!=null">
+            AND action_type=#{actionType}
+        </if>
+        <if test="isShow!=null">
+            AND is_show=#{isShow}
+        </if>
+        <if test="locationId!=null">
+            AND location_id=#{locationId}
+        </if>
+        <if test="module!=null">
+            AND module=#{module}
+        </if>
+    </select>
+
+    <update id="updateStatus">
+        update banner
+        set
+        is_show = #{isShow}
+        where id in(
+        <foreach collection="ids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </update>
+
+
+    <!-- 官网前台banner列表 -->
+    <select id="getBannerList"  resultType="com.hgups.express.domain.Banner">
+        select *
+        from banner
+        where 1=1 and is_show = 1
+        <if test="type!=null">
+            AND type=#{type}
+        </if>
+        <if test="actionType!=null">
+            AND action_type=#{actionType}
+        </if>
+        <if test="locationId!=null">
+            AND location_id=#{locationId}
+        </if>
+        <if test="module!=null">
+            AND module=#{module}
+        </if>
+        order by weight desc,update_time desc LIMIT #{current},#{size}
+    </select>
+    <select id="getBannerCount" resultType="Integer">
+        select count(*)
+        from banner
+        where 1=1 and is_show = 1
+        <if test="type!=null">
+            AND type=#{type}
+        </if>
+        <if test="actionType!=null">
+            AND action_type=#{actionType}
+        </if>
+        <if test="locationId!=null">
+            AND location_id=#{locationId}
+        </if>
+        <if test="module!=null">
+            AND module=#{module}
+        </if>
+    </select>
+</mapper>

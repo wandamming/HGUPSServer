@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hgups.express.mapper.EntryButtonMapper">
+    <!--快捷入口-->
+    <select id="getEntry" resultType="com.hgups.express.vo.EntryVo">
+        select name , icon ,path from entrybutton e inner join user_entrybutton u
+        on e.id = u.button_id
+        <where>
+            <if test="userId!=null">
+                user_id=#{userId}
+            </if>
+        </where>
+        and e.is_show = 1
+        order by u.weight desc,
+        u.create_time desc
+    </select>
+    <!--入口列表-->
+    <select id="getAllEntry" resultType="com.hgups.express.vo.EntryVo">
+        select name , icon ,path from entrybutton
+        <where>
+            <if test="name!=null">
+                name like concat('%',#{name},'%')
+            </if>
+        </where>
+    </select>
+
+    <!--添加快捷入口 -->
+    <insert id="insertEntry">
+        insert into user_entrybutton (button_id,user_id,create_time,update_time,weight)
+        value(#{param.buttonId},#{userId},current_timestamp,current_timestamp,0)
+    </insert>
+
+    <!--删除快捷入口 -->
+    <delete id="deleteEntry" >
+        delete from user_entrybutton
+        where user_id = #{userId}
+        and button_id = #{param.buttonId}
+    </delete>
+    <!--获取用户使用记录-->  <!--create_time与update_time 不等-->
+    <select id="getRecord" resultType="com.hgups.express.vo.EntryVo">
+        select name , icon ,path from entrybutton e inner join user_entrybutton u
+        on e.id = u.button_id
+        where timediff(create_time,update_time) != 0
+            <if test="userId!=null">
+                and user_id=#{userId}
+            </if>
+        and e.is_show = 1
+        order by create_time desc
+    </select>
+    <!--删除用户使用记录-->
+    <update id="deleteAllRecords">
+        update user_entrybutton
+        set update_time = create_time
+        <where>
+            <if test="userId != null">
+                user_id=#{userId}
+            </if>
+        </where>
+    </update>
+    <!--更新记录-->
+    <update id="updateRecords">
+        update user_entrybutton
+        set update_time = current_timestamp
+        where id = #{userButtonId}
+    </update>
+
+    <select id="getWeight" resultType="java.lang.Integer">
+        select weight from user_entrybutton
+        where button_id in(
+        <foreach collection="param.ids" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+        and user_id = #{userId}
+        order by weight asc
+    </select>
+
+    <update id="updateSort">
+        update user_entrybutton
+        set weight =  weight+1
+        where user_id = #{userId}
+        and weight between #{weight1} and #{weight2}
+    </update>
+    <update id="updateSort1">
+        update user_entrybutton
+        set weight =  weight-1
+        where user_id = #{userId}
+        and weight between #{weight1} and #{weight2}
+    </update>
+    <update id="updateChange">
+        update user_entrybutton
+        set weight = #{weight1}
+        where id=#{buttonId}
+        and user_id = #{userId}
+    </update>
+
+    <select id="getW" resultType="java.lang.Integer">
+        select weight from user_entrybutton
+        where user_id = #{userId}
+        and button_id = #{buttonId}
+    </select>
+
+
+</mapper>

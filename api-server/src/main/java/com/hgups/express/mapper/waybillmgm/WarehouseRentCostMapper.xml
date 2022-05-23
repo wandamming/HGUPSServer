@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hgups.express.mapper.WarehouseRentCostMapper">
+
+    <resultMap id="warehouseRentCostListResult" type="com.hgups.express.domain.param.WarehouseRentCostListVo">
+        <id column="wid" property="id"/>
+        <result column="project_name" property="projectName"/>
+        <collection property="warehouseRentCosts" ofType="com.hgups.express.domain.WarehouseRentCost" autoMapping="true">
+        </collection>
+    </resultMap>
+
+
+    <select id="warehouseRentCostList" resultMap="warehouseRentCostListResult">
+        select * from (SELECT id wid,project_name from warehouse_project limit #{current},#{size}) wp inner join warehouse_rent_cost wrc on wp.wid=wrc.charge_project_id
+    </select>
+</mapper>

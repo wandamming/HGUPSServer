@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hgups.express.mapper.SenderMapper">
+
+    <select id="allSender" resultType="Sender">
+        SELECT * FROM sender where 1=1
+        <if test="likes != null and likes != ''">or name like concat('%',#{likes},'%')</if>
+        <if test="likes != null and likes != ''">or company like concat('%',#{likes},'%')</if>
+        <if test="likes != null and likes != ''">or phone like concat('%',#{likes},'%')</if>
+        <if test="likes != null and likes != ''">or address_one like concat('%',#{likes},'%')</if>
+        <if test="likes != null and likes != ''">or email like concat('%',#{likes},'%')</if>
+        and user_id=#{userId}
+        and is_save=1
+        ORDER BY id DESC LIMIT #{current},#{size}
+    </select>
+
+    <delete id="deleteSender" parameterType="Integer">
+        delete from sender where id=#{id}
+    </delete>
+
+</mapper>

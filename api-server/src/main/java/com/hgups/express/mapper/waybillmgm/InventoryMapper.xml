@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hgups.express.mapper.InventoryMapper">
+
+    <select id="createInventoryList" resultType="com.hgups.express.domain.Inventory">
+        select i.* from inventory i
+          inner join inventory_product ip
+            on i.id=ip.inventory_id
+          inner join product_info pi
+            on ip.product_id=pi.id
+        where 1=1
+          <if test="like!=null and like!=''">
+              and (pi.c_name=#{likes} or pi.e_name=#{likes} or pi.sku_code={likes})
+          </if>
+        group by i.id
+        ORDER BY id DESC LIMIT #{current},#{size}
+    </select>
+
+    <select id="createInventoryCount" resultType="Integer">
+        select count(distinct i.id) from inventory i
+        inner join inventory_product ip
+        on i.id=ip.inventory_id
+        inner join product_info pi
+        on ip.product_id=pi.id
+        where 1=1
+        <if test="like!=null and like!=''">
+            and (pi.c_name=#{likes} or pi.e_name=#{likes} or pi.sku_code={likes})
+        </if>
+    </select>
+</mapper>

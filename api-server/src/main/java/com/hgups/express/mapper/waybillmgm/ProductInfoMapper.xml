@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hgups.express.mapper.ProductInfoMapper">
+    <select id="getOrderProduct" resultType="com.hgups.express.domain.vo.ProductInfoVo">
+        select pi.id id,sku_code sku,image_url image,c_name chineseName,e_name englishName,inventory_number inventoryNumber
+        FROM product_info pi,order_info oi,order_product op
+        WHERE oi.id = op.order_id
+        AND op.product_id = pi.id
+        and oi.id = #{id}
+
+
+    </select>
+
+    <select id="getOrderProductCount" resultType="Integer">
+    select count(*)
+    FROM product_info pi,order_info oi,order_product op
+        WHERE oi.id = op.order_id
+        AND op.product_id = pi.id
+        and oi.id = #{id}
+
+    </select>
+</mapper>

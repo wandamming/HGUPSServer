@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hgups.express.mapper.ApiAccountMapper">
+    <select id="getPageList" resultType="com.hgups.express.domain.ApiAccount">
+        SELECT * FROM apiaccount where 1=1
+        <if test="uname != null and uname != ''">or uname like concat('%',#{uname},'%')</if>
+        ORDER BY id DESC LIMIT #{current},#{size}
+    </select>
+
+
+    <delete id="deleteApiAccount" parameterType="Integer">
+        delete from apiaccount where id=#{id}
+    </delete>
+
+    <insert id="insertApiAccount" keyProperty="id" useGeneratedKeys="true" parameterType="com.hgups.express.domain.ApiAccount">
+        insert into apiaccount(uname,userid,appToken,appKey,remarks)
+        values(#{uname},#{userId}, #{appToken}, #{appKey},#{remarks})
+    </insert>
+
+
+</mapper>
